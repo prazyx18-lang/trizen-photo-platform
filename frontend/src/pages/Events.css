@@ -1,0 +1,59 @@
+.events-container {
+  padding: 40px;
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.event-form {
+  margin-top: 30px;
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  max-width: 600px;
+}
+
+.event-form input,
+.event-form textarea {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  color: black;
+  background: white;
+}
+
+.event-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.event-form button {
+  margin-top: 15px;
+  padding: 12px 25px;
+  background: #111;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.event-form button:hover {
+  background: #333;
+}
+
+.events-list {
+  margin-top: 30px;
+}
+
+.event-card {
+  background: white;
+  padding: 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
