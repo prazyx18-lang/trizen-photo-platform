@@ -27,7 +27,7 @@ function Galleries() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:3000/api/events",
+         "https://trizen-photo-platform-api.onrender.com/api/events",
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -72,7 +72,7 @@ function Galleries() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:3000/api/events/${eventId}/photos`,
+        `https://trizen-photo-platform-api.onrender.com/api/events/${eventId}/photos`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -128,7 +128,7 @@ function Galleries() {
 
       const response = await fetch(
 
-        `http://localhost:3000/api/events/${selectedEvent}/galleries`,
+       `https://trizen-photo-platform-api.onrender.com/api/events/${selectedEvent}/galleries`,
 
         {
           method: "POST",
@@ -213,7 +213,7 @@ function Galleries() {
 
       const response = await fetch(
 
-        `http://localhost:3000/api/galleries/${galleryId}/photos`,
+        `https://trizen-photo-platform-api.onrender.com/api/galleries/${galleryId}/photos`,
 
         {
           method: "POST",
@@ -280,7 +280,7 @@ function Galleries() {
 
       const response = await fetch(
 
-        `http://localhost:3000/api/galleries/${galleryId}/publish`,
+        `https://trizen-photo-platform-api.onrender.com/api/galleries/${galleryId}/publish`,
 
         {
           method: "PATCH",
@@ -308,13 +308,14 @@ function Galleries() {
       }
 
 
-      alert(
-        `Gallery published successfully 🎉
-        
-Shareable Link:
-http://localhost:5173${data.shareableLink}`
-      );
+      const shareableUrl = `${window.location.origin}${data.shareableLink}`;
 
+alert(
+  `Gallery published successfully 🎉
+
+Shareable Link:
+${shareableUrl}`
+);
 
     } catch (error) {
 

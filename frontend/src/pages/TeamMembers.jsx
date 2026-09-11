@@ -18,7 +18,7 @@ function TeamMembers() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:3000/api/users/team",
+        "https://trizen-photo-platform-api.onrender.com/api/users/team",
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -68,7 +68,7 @@ function TeamMembers() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:3000/api/users/team",
+        "https://trizen-photo-platform-api.onrender.com/api/users/team",
         {
           method: "POST",
 

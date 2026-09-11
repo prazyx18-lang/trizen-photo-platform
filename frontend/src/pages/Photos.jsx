@@ -19,7 +19,7 @@ function Photos() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:3000/api/events",
+         "https://trizen-photo-platform-api.onrender.com/api/events",
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -64,7 +64,7 @@ function Photos() {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        `http://localhost:3000/api/events/${eventId}/photos`,
+        `https://trizen-photo-platform-api.onrender.com/api/events/${eventId}/photos`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -133,7 +133,7 @@ function Photos() {
 
 
       const response = await fetch(
-        `http://localhost:3000/api/events/${selectedEvent}/photos`,
+      `https://trizen-photo-platform-api.onrender.com/api/events/${selectedEvent}/photos`,
         {
           method: "POST",
 

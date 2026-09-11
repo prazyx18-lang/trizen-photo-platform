@@ -21,7 +21,7 @@ function PublicGallery() {
       setLoading(true);
 
       const response = await fetch(
-        `http://localhost:3000/api/public/gallery/${slug}/verify-pin`,
+        `https://trizen-photo-platform-api.onrender.com/api/public/gallery/${slug}/verify-pin`,
         {
           method: "POST",
 
@@ -54,7 +54,7 @@ function PublicGallery() {
 
       // GET PUBLIC GALLERY
       const galleryResponse = await fetch(
-        `http://localhost:3000/api/public/gallery/${slug}`,
+        `https://trizen-photo-platform-api.onrender.com/api/public/gallery/${slug}`,
         {
           headers: {
             Authorization: `Bearer ${galleryToken}`
