@@ -11,21 +11,21 @@
 
     const [loading, setLoading] = useState(true);
 
+// GET EVENTS
+const fetchEvents = async () => {
 
-    // GET EVENTS
-    const fetchEvents = async () => {
-
-        try {
+    try {
 
         const token = localStorage.getItem("token");
-const response = await fetch(
-    "https://trizen-photo-platform-api.onrender.com",
-    {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }
-);
+
+        const response = await fetch(
+            "https://trizen-photo-platform-api.onrender.com/api/events",
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
 
         const data = await response.json();
 
@@ -33,51 +33,50 @@ const response = await fetch(
             setEvents(data);
         }
 
-        } catch (error) {
+    } catch (error) {
 
         console.error(error);
 
-        } finally {
+    } finally {
 
         setLoading(false);
 
-        }
+    }
 
-    };
-
-
-    useEffect(() => {
-
-        fetchEvents();
-
-    }, []);
+};
 
 
-    // CREATE EVENT
-    const handleCreateEvent = async (e) => {
+useEffect(() => {
 
-        e.preventDefault();
+    fetchEvents();
 
-        try {
+}, []);
+
+
+// CREATE EVENT
+const handleCreateEvent = async (e) => {
+
+    e.preventDefault();
+
+    try {
 
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-            "https://trizen-photo-platform-api.onrender.com",
+            "https://trizen-photo-platform-api.onrender.com/api/events",
             {
-            method: "POST",
+                method: "POST",
 
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`
-            },
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
 
-            body: JSON.stringify({
-                name,
-                description,
-                event_date: eventDate
-            })
-
+                body: JSON.stringify({
+                    name,
+                    description,
+                    event_date: eventDate
+                })
             }
         );
 
@@ -94,7 +93,6 @@ const response = await fetch(
 
 
         alert("Event created successfully 🎉");
-
 
         // Clear form
         setName("");
