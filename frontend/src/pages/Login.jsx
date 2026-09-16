@@ -15,9 +15,10 @@ function Login() {
     e.preventDefault();
 
     try {
+      console.log("EMAIL BEING SENT:", email);
 
       const response = await fetch(
-       "https://trizen-photo-platform-api.onrender.com/api/auth/login",
+       "http://localhost:3000/api/auth/login",
         {
           method: "POST",
 
@@ -33,6 +34,9 @@ function Login() {
       );
 
       const data = await response.json();
+
+      console.log("LOGIN STATUS:", response.status);
+console.log("LOGIN RESPONSE:", data);
 
 
       if (!response.ok) {

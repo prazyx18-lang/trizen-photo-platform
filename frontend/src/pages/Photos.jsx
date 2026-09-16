@@ -4,7 +4,7 @@ function Photos() {
 
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState("");
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [selectedPhotos, setSelectedPhotos] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -101,81 +101,100 @@ function Photos() {
   };
 
 
-  // UPLOAD PHOTO
-  const handleUpload = async (e) => {
+  // UPLOAD MULTIPLE PHOTOS
+const handleUpload = async (e) => {
 
     e.preventDefault();
 
     if (!selectedEvent) {
 
-      alert("Please select an event");
+        alert("Please select an event");
 
-      return;
+        return;
 
     }
 
-    if (!selectedPhoto) {
+    if (selectedPhotos.length === 0) {
 
-      alert("Please select a photo");
+        alert("Please select at least one photo");
 
-      return;
+        return;
 
     }
 
 
     try {
 
-      const token = localStorage.getItem("token");
+        setLoading(true);
 
-      const formData = new FormData();
+        const token = localStorage.getItem("token");
 
-      formData.append("photo", selectedPhoto);
+        const formData = new FormData();
 
 
-      const response = await fetch(
-      `https://trizen-photo-platform-api.onrender.com/api/events/${selectedEvent}/photos`,
-        {
-          method: "POST",
+        // Add all selected photos
+        selectedPhotos.forEach((photo) => {
 
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
+            formData.append("photos", photo);
 
-          body: formData
+        });
+
+
+        const response = await fetch(
+
+            `https://trizen-photo-platform-api.onrender.com/api/events/${selectedEvent}/photos`,
+
+            {
+                method: "POST",
+
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+
+                body: formData
+            }
+
+        );
+
+
+        const data = await response.json();
+
+
+        if (!response.ok) {
+
+            alert(data.message);
+
+            return;
+
         }
-      );
-
-      const data = await response.json();
 
 
-      if (!response.ok) {
-
-        alert(data.message);
-
-        return;
-
-      }
+        alert(
+            `${data.count} photo(s) uploaded successfully 🎉`
+        );
 
 
-      alert("Photo uploaded successfully 🎉");
+        // Clear selected photos
+        setSelectedPhotos([]);
 
-      setSelectedPhoto(null);
 
-
-      // Refresh photos
-      fetchPhotos(selectedEvent);
+        // Refresh photos
+        fetchPhotos(selectedEvent);
 
 
     } catch (error) {
 
-      console.error(error);
+        console.error(error);
 
-      alert("Something went wrong");
+        alert("Something went wrong");
+
+    } finally {
+
+        setLoading(false);
 
     }
 
-  };
-
+};
 
   return (
 
@@ -237,28 +256,33 @@ function Photos() {
         <h3>Upload Photo</h3>
 
         <input
-          type="file"
-          accept="image/*"
-          onChange={(e) =>
-            setSelectedPhoto(e.target.files[0])
-          }
-          style={{
-            display: "block",
-            marginTop: "10px"
-          }}
+    type="file"
+    accept="image/*"
+    multiple
+    onChange={(e) =>
+        setSelectedPhotos(Array.from(e.target.files))
+    }
+    style={{
+        display: "block",
+        marginTop: "10px"
+    }}
         />
 
 
-        <button
-          type="submit"
-          style={{
-            marginTop: "15px",
-            padding: "12px 25px",
-            cursor: "pointer"
-          }}
-        >
-          📤 Upload Photo
-        </button>
+       <button
+  type="submit"
+  disabled={loading || selectedPhotos.length === 0}
+  style={{
+    marginTop: "15px",
+    padding: "12px 25px",
+    cursor: "pointer"
+  }}
+>
+  {loading
+    ? "Uploading..."
+    : `📤 Upload ${selectedPhotos.length} Photos`
+  }
+</button>
 
       </form>
 
