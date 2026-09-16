@@ -2,6 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
+console.log("🔥 NEW PHOTO ROUTE VERSION LOADED 🔥");
 const {
     uploadPhoto,
     getEventPhotos
@@ -16,7 +17,26 @@ const upload = require("../config/multer");
 router.post(
     "/events/:eventId/photos",
     authenticateToken,
-    upload.single("photo"),
+    (req, res, next) => {
+
+        upload.array("photos", 50)(req, res, (err) => {
+
+            if (err) {
+
+                console.error("MULTER ERROR:", err);
+
+                return res.status(400).json({
+                    message: err.message,
+                    code: err.code
+                });
+
+            }
+
+            next();
+
+        });
+
+    },
     uploadPhoto
 );
 

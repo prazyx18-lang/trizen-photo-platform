@@ -7,7 +7,6 @@ function Photos() {
   const [selectedPhotos, setSelectedPhotos] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
 
   // GET EVENTS
@@ -20,7 +19,7 @@ function Photos() {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-         "https://trizen-photo-platform-api.onrender.com/api/events",
+          "https://trizen-photo-platform-api.onrender.com/api/events",
           {
             headers: {
               Authorization: `Bearer ${token}`
@@ -36,7 +35,6 @@ function Photos() {
 
       } catch (error) {
 
-        
         console.error(error);
 
       }
@@ -104,114 +102,112 @@ function Photos() {
 
 
   // UPLOAD MULTIPLE PHOTOS
-const handleUpload = async (e) => {
+  const handleUpload = async (e) => {
 
     e.preventDefault();
 
     if (!selectedEvent) {
 
-        alert("Please select an event");
+      alert("Please select an event");
 
-        return;
+      return;
 
     }
 
     if (selectedPhotos.length === 0) {
 
-        alert("Please select at least one photo");
+      alert("Please select at least one photo");
 
-        return;
+      return;
 
     }
 
-
     try {
 
-        setLoading(true);
+      setLoading(true);
 
-        const token = localStorage.getItem("token");
+      const token = localStorage.getItem("token");
 
-        const formData = new FormData();
-
-
-        // Add all selected photos
-        selectedPhotos.forEach((photo) => {
-
-            formData.append("photos", photo);
-
-        });
+      const formData = new FormData();
 
 
-        const response = await fetch(
+      // Add all selected photos
+      selectedPhotos.forEach((photo) => {
 
-            `https://trizen-photo-platform-api.onrender.com/api/events/${selectedEvent}/photos`,
+        formData.append("photos", photo);
 
-            {
-                method: "POST",
-
-                headers: {
-                    Authorization: `Bearer ${token}`
-                },
-
-                body: formData
-            }
-
-        );
-
-const responseText = await response.text();
-
-let data;
-
-try {
-
-    data = JSON.parse(responseText);
-
-} catch (error) {
-
-    console.error("SERVER RESPONSE:", responseText);
-
-    alert("Upload failed. Check Render Logs.");
-
-    return;
-
-}
+      });
 
 
-if (!response.ok) {
+      const response = await fetch(
+        `https://trizen-photo-platform-api.onrender.com/api/events/${selectedEvent}/photos`,
+        {
+          method: "POST",
 
-    alert(data.message || "Upload failed");
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
 
-    return;
-
-}
-
-
-        alert(
-            `${data.count} photo(s) uploaded successfully 🎉`
-        );
-
-
-        // Clear selected photos
-        setSelectedPhotos([]);
+          body: formData
+        }
+      );
 
 
-        // Refresh photos
-        fetchPhotos(selectedEvent);
+      const responseText = await response.text();
+
+      let data;
+
+      try {
+
+        data = JSON.parse(responseText);
+
+      } catch (error) {
+
+        console.error("SERVER RESPONSE:", responseText);
+
+        alert("Upload failed. Check Render Logs.");
+
+        return;
+
+      }
+
+
+      if (!response.ok) {
+
+        alert(data.message || "Upload failed");
+
+        return;
+
+      }
+
+
+      alert(
+        `${data.count} photo(s) uploaded successfully 🎉`
+      );
+
+
+      // Clear selected photos
+      setSelectedPhotos([]);
+
+
+      // Refresh photos
+      fetchPhotos(selectedEvent);
 
 
     } catch (error) {
 
-    console.error("UPLOAD ERROR:", error);
+      console.error("UPLOAD ERROR:", error);
 
-    alert(error.message || "Something went wrong");
+      alert(error.message || "Something went wrong");
 
-}finally {
+    } finally {
 
-        setLoading(false);
+      setLoading(false);
 
     }
 
-};
+  };
+
 
   return (
 
@@ -270,36 +266,41 @@ if (!response.ok) {
         }}
       >
 
-        <h3>Upload Photo</h3>
+        <h3>Upload Photos</h3>
 
         <input
-    type="file"
-    accept="image/*"
-    multiple
-    onChange={(e) =>
-        setSelectedPhotos(Array.from(e.target.files))
-    }
-    style={{
-        display: "block",
-        marginTop: "10px"
-    }}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={(e) =>
+            setSelectedPhotos(Array.from(e.target.files))
+          }
+          style={{
+            display: "block",
+            marginTop: "10px"
+          }}
         />
 
 
-       <button
-  type="submit"
-  disabled={loading || selectedPhotos.length === 0}
-  style={{
-    marginTop: "15px",
-    padding: "12px 25px",
-    cursor: "pointer"
-  }}
->
-  {loading
-    ? "Uploading..."
-    : `📤 Upload ${selectedPhotos.length} Photos`
-  }
-</button>
+        <button
+          type="submit"
+          disabled={
+            loading ||
+            selectedPhotos.length === 0
+          }
+          style={{
+            marginTop: "15px",
+            padding: "12px 25px",
+            cursor: "pointer"
+          }}
+        >
+
+          {loading
+            ? "Uploading..."
+            : `📤 Upload ${selectedPhotos.length} Photos`
+          }
+
+        </button>
 
       </form>
 
@@ -331,100 +332,40 @@ if (!response.ok) {
           }}
         >
 
-     {photos.map((photo) => (
+          {photos.map((photo) => (
 
-  <div
-    key={photo.id}
-    style={{
-      width: "200px"
-    }}
-  >
+            <div
+              key={photo.id}
+              style={{
+                width: "200px"
+              }}
+            >
 
-    <img
-      src={photo.storage_url}
-      alt={photo.filename}
-      onClick={() => {
-        console.log("PHOTO CLICKED:", photo);
-        setSelectedPhoto(photo);
-      }}
-      style={{
-        width: "200px",
-        height: "200px",
-        objectFit: "cover",
-        borderRadius: "10px",
-        cursor: "pointer",
-        display: "block"
-      }}
-    />
+              <img
+                src={photo.storage_url}
+                alt={photo.filename}
+                style={{
+                  width: "200px",
+                  height: "200px",
+                  objectFit: "cover",
+                  borderRadius: "10px",
+                  display: "block"
+                }}
+              />
 
-    <p>{photo.filename}</p>
+              <p>
+                {photo.filename}
+              </p>
 
-  </div>
+            </div>
 
-))}
+          ))}
 
         </div>
 
       )}
-{selectedPhoto && (
 
-  <div
-    onClick={() => setSelectedPhoto(null)}
-    style={{
-      position: "fixed",
-      inset: 0,
-      width: "100vw",
-      height: "100vh",
-      backgroundColor: "rgba(0, 0, 0, 0.95)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 999999
-    }}
-  >
-
-    {/* CLOSE BUTTON */}
-
-    <button
-      onClick={() => setSelectedPhoto(null)}
-      style={{
-        position: "absolute",
-        top: "20px",
-        right: "30px",
-        fontSize: "35px",
-        color: "white",
-        background: "none",
-        border: "none",
-        cursor: "pointer",
-        zIndex: 1000000
-      }}
-    >
-      ✕
-    </button>
-
-
-    {/* BIG PHOTO */}
-
-    <img
-      src={selectedPhoto.storage_url}
-      alt={selectedPhoto.filename}
-      onClick={(e) => e.stopPropagation()}
-      style={{
-        maxWidth: "90vw",
-        maxHeight: "90vh",
-        width: "auto",
-        height: "auto",
-        objectFit: "contain",
-        borderRadius: "10px",
-        display: "block"
-      }}
-    />
-
-  </div>
-
-)}
-
- </div>
+    </div>
 
   );
 
