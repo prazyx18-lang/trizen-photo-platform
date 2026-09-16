@@ -7,6 +7,7 @@ function Photos() {
   const [selectedPhotos, setSelectedPhotos] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedPhoto, setSelectedPhoto] = useState(null);
 
 
   // GET EVENTS
@@ -35,6 +36,7 @@ function Photos() {
 
       } catch (error) {
 
+        
         console.error(error);
 
       }
@@ -184,11 +186,11 @@ const handleUpload = async (e) => {
 
     } catch (error) {
 
-        console.error(error);
+    console.error("UPLOAD ERROR:", error);
 
-        alert("Something went wrong");
+    alert(error.message || "Something went wrong");
 
-    } finally {
+}finally {
 
         setLoading(false);
 
@@ -314,32 +316,100 @@ const handleUpload = async (e) => {
           }}
         >
 
-          {photos.map((photo) => (
+     {photos.map((photo) => (
 
-            <div key={photo.id}>
+  <div
+    key={photo.id}
+    style={{
+      width: "200px"
+    }}
+  >
 
-              <img
-                src={photo.storage_url}
-                alt={photo.filename}
-                style={{
-                  width: "200px",
-                  height: "200px",
-                  objectFit: "cover",
-                  borderRadius: "10px"
-                }}
-              />
+    <img
+      src={photo.storage_url}
+      alt={photo.filename}
+      onClick={() => {
+        console.log("PHOTO CLICKED:", photo);
+        setSelectedPhoto(photo);
+      }}
+      style={{
+        width: "200px",
+        height: "200px",
+        objectFit: "cover",
+        borderRadius: "10px",
+        cursor: "pointer",
+        display: "block"
+      }}
+    />
 
-              <p>{photo.filename}</p>
+    <p>{photo.filename}</p>
 
-            </div>
+  </div>
 
-          ))}
+))}
 
         </div>
 
       )}
+{selectedPhoto && (
 
-    </div>
+  <div
+    onClick={() => setSelectedPhoto(null)}
+    style={{
+      position: "fixed",
+      inset: 0,
+      width: "100vw",
+      height: "100vh",
+      backgroundColor: "rgba(0, 0, 0, 0.95)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 999999
+    }}
+  >
+
+    {/* CLOSE BUTTON */}
+
+    <button
+      onClick={() => setSelectedPhoto(null)}
+      style={{
+        position: "absolute",
+        top: "20px",
+        right: "30px",
+        fontSize: "35px",
+        color: "white",
+        background: "none",
+        border: "none",
+        cursor: "pointer",
+        zIndex: 1000000
+      }}
+    >
+      ✕
+    </button>
+
+
+    {/* BIG PHOTO */}
+
+    <img
+      src={selectedPhoto.storage_url}
+      alt={selectedPhoto.filename}
+      onClick={(e) => e.stopPropagation()}
+      style={{
+        maxWidth: "90vw",
+        maxHeight: "90vh",
+        width: "auto",
+        height: "auto",
+        objectFit: "contain",
+        borderRadius: "10px",
+        display: "block"
+      }}
+    />
+
+  </div>
+
+)}
+
+ </div>
 
   );
 
