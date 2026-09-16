@@ -1,7 +1,7 @@
 const db = require("../config/db");
 
 
-// UPLOAD PHOTO
+// UPLOAD MULTIPLE PHOTOS
 const uploadPhoto = async (req, res) => {
 
     try {
@@ -9,11 +9,11 @@ const uploadPhoto = async (req, res) => {
         const { eventId } = req.params;
 
 
-        // Check if a file was uploaded
-        if (!req.file) {
+        // Check if files were uploaded
+        if (!req.files || req.files.length === 0) {
 
             return res.status(400).json({
-                message: "Photo is required"
+                message: "At least one photo is required"
             });
 
         }
@@ -60,41 +60,59 @@ const uploadPhoto = async (req, res) => {
         }
 
 
-        // Save photo details in database
-        const [result] = await db.promise().query(
+        // Store uploaded photos
+        const uploadedPhotos = [];
 
-            `INSERT INTO photos
-            (
-                event_id,
-                uploaded_by,
-                filename,
-                storage_url,
-                storage_public_id,
-                file_size,
-                mime_type
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?)`,
 
-            [
-                eventId,
-                req.user.id,
-                req.file.originalname,
-                req.file.path,
-                req.file.filename,
-                req.file.size,
-                req.file.mimetype
-            ]
+        for (const file of req.files) {
 
-        );
+            const [result] = await db.promise().query(
+
+                `INSERT INTO photos
+                (
+                    event_id,
+                    uploaded_by,
+                    filename,
+                    storage_url,
+                    storage_public_id,
+                    file_size,
+                    mime_type
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?)`,
+
+                [
+                    eventId,
+                    req.user.id,
+                    file.originalname,
+                    file.path,
+                    file.filename,
+                    file.size,
+                    file.mimetype
+                ]
+
+            );
+
+
+            uploadedPhotos.push({
+
+                photoId: result.insertId,
+
+                filename: file.originalname,
+
+                photoUrl: file.path
+
+            });
+
+        }
 
 
         res.status(201).json({
 
-            message: "Photo uploaded successfully",
+            message: `${uploadedPhotos.length} photo(s) uploaded successfully`,
 
-            photoId: result.insertId,
+            count: uploadedPhotos.length,
 
-            photoUrl: req.file.path
+            photos: uploadedPhotos
 
         });
 

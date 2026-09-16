@@ -268,18 +268,19 @@ function Photos() {
 
         <h3>Upload Photos</h3>
 
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={(e) =>
-            setSelectedPhotos(Array.from(e.target.files))
-          }
-          style={{
-            display: "block",
-            marginTop: "10px"
-          }}
-        />
+<input
+  type="file"
+  accept="image/*"
+  multiple
+  onChange={(e) => {
+    const files = Array.from(e.target.files || []);
+
+    console.log("FILES SELECTED:", files);
+    console.log("NUMBER OF FILES:", files.length);
+
+    setSelectedPhotos(files);
+  }}
+/>
 
 
         <button
