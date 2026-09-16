@@ -158,17 +158,32 @@ const handleUpload = async (e) => {
 
         );
 
+const responseText = await response.text();
 
-        const data = await response.json();
+let data;
+
+try {
+
+    data = JSON.parse(responseText);
+
+} catch (error) {
+
+    console.error("SERVER RESPONSE:", responseText);
+
+    alert("Upload failed. Check Render Logs.");
+
+    return;
+
+}
 
 
-        if (!response.ok) {
+if (!response.ok) {
 
-            alert(data.message);
+    alert(data.message || "Upload failed");
 
-            return;
+    return;
 
-        }
+}
 
 
         alert(
